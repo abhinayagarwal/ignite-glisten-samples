@@ -1,0 +1,8 @@
+
+application {
+    mainClass = 'com.gluonhq.hello.HelloGluon'
+}
+
+dependencies {
+    implementation 'com.gluonhq:ignite-guice:1.2.0'
+}

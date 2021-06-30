@@ -1,0 +1,40 @@
+plugins {
+    id 'base'
+    id 'org.openjfx.javafxplugin' version '0.0.10' apply false
+    id 'com.gluonhq.gluonfx-gradle-plugin' version '1.0.2' apply false
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'org.openjfx.javafxplugin'
+    apply plugin: 'com.gluonhq.gluonfx-gradle-plugin'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://nexus.gluonhq.com/nexus/content/repositories/releases'
+        }
+    }
+
+    dependencies {
+        implementation 'com.gluonhq:charm-glisten:+'
+    }
+
+    javafx {
+        version '11'
+        modules('javafx.controls', 'javafx.fxml')
+    }
+
+    gluonfx {
+        attachConfig {
+            version = "4.0.10"
+            services 'display', 'lifecycle', 'statusbar', 'storage'
+        }
+    }
+}
+
+

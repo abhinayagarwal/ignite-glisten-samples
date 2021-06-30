@@ -1,0 +1,9 @@
+
+application {
+    mainClass = 'com.gluonhq.hello.HelloGluon'
+}
+
+dependencies {
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'com.gluonhq:ignite-spring:1.2.0'
+}

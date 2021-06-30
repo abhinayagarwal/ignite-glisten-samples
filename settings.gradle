@@ -1,0 +1,8 @@
+rootProject.name = 'ignite-samples'
+
+include 'dagger', 'guice', 'spring'
+
+project(':dagger').projectDir = file("dagger")
+project(':guice').projectDir = file("guice")
+project(':spring').projectDir = file("spring")
+

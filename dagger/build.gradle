@@ -1,0 +1,10 @@
+
+application {
+    mainClass = 'com.gluonhq.hello.HelloGluon'
+}
+
+dependencies {
+    implementation 'com.gluonhq:ignite-dagger:1.2.0'
+    // to compile sample DaggerModule
+    annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.5'
+}
