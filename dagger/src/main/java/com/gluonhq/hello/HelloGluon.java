@@ -32,8 +32,8 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.Swatch;
 import com.gluonhq.hello.service.Service;
-import com.gluonhq.ignite.dagger.DaggerContext;
 import com.gluonhq.hello.views.FirstPresenter;
+import com.gluonhq.ignite.dagger.DaggerContext;
 import dagger.Module;
 import dagger.Provides;
 import javafx.fxml.FXMLLoader;
@@ -43,13 +43,15 @@ import javafx.scene.Scene;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class HelloGluon extends MobileApplication {
 
     private final DaggerContext context = new DaggerContext(this, () -> Collections.singletonList(new DaggerModule()));
+
+    public static final String PRIMARY_VIEW = HOME_VIEW;
+    public static final String SECONDARY_VIEW = "Secondary View";
 
     @Inject
     FXMLLoader fxmlLoader;
@@ -58,10 +60,11 @@ public class HelloGluon extends MobileApplication {
     public void init() throws IOException {
         context.init();
 
-        fxmlLoader.setLocation(getViewLocation());
-        fxmlLoader.setResources(getResourceLocation());
-        Parent parent = fxmlLoader.load();
-        addViewFactory(MobileApplication.HOME_VIEW, () -> new View(parent));
+        addViewFactory(PRIMARY_VIEW, () -> (View) loadFXML("first"));
+        // TODO: This fails as FXMLLoader can be used to load a FXML just once
+        addViewFactory(SECONDARY_VIEW, () -> (View) loadFXML("second"));
+
+        DrawerManager.buildDrawer(this);
     }
 
     @Override
@@ -82,12 +85,15 @@ public class HelloGluon extends MobileApplication {
         launch();
     }
 
-    URL getViewLocation() {
-        return getClass().getResource("/com/gluonhq/hello/views/first.fxml");
-    }
-
-    ResourceBundle getResourceLocation() {
-        return ResourceBundle.getBundle("com.gluonhq.hello.views.first");
+    Parent loadFXML(String name) {
+        fxmlLoader.setLocation(getClass().getResource("/com/gluonhq/hello/views/" + name + ".fxml"));
+        fxmlLoader.setResources( ResourceBundle.getBundle("com.gluonhq.hello.views." + name));
+        try {
+            return fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

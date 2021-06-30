@@ -25,14 +25,16 @@ public class FirstPresenter {
     @Inject
     Service service;
 
+    // Cannot Inject this
+    /*@Inject
+    HelloGluon appManager;*/
 
     public void initialize() {
         first.showingProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
                 MobileApplication appManager = MobileApplication.getInstance();
                 AppBar appBar = appManager.getAppBar();
-                appBar.setNavIcon(MaterialDesignIcon.MENU.button(e ->
-                        appManager.getDrawer().open()));
+                appBar.setNavIcon(MaterialDesignIcon.MENU.button(e -> appManager.getDrawer().open()));
                 appBar.setTitleText("First");
                 appBar.getActionItems().add(MaterialDesignIcon.SEARCH.button(e ->
                         System.out.println("Search")));
@@ -43,8 +45,7 @@ public class FirstPresenter {
 
     @FXML
     void buttonClick() {
-        label.setText(resources.getString("label.text.2"));
+        // label.setText(resources.getString("label.text.2"));
         System.out.println(service.getText());
     }
-
 }
