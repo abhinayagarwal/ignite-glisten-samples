@@ -33,6 +33,7 @@ import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.Swatch;
 import com.gluonhq.hello.service.Service;
 import com.gluonhq.hello.views.FirstPresenter;
+import com.gluonhq.hello.views.SecondPresenter;
 import com.gluonhq.ignite.dagger.DaggerContext;
 import dagger.Module;
 import dagger.Provides;
@@ -60,9 +61,7 @@ public class HelloGluon extends MobileApplication {
     public void init() throws IOException {
         context.init();
 
-        addViewFactory(PRIMARY_VIEW, () -> (View) loadFXML("first"));
-        // TODO: This fails as FXMLLoader can be used to load a FXML just once
-        addViewFactory(SECONDARY_VIEW, () -> (View) loadFXML("second"));
+        addViewFactory(PRIMARY_VIEW, () -> (View) loadFXML(fxmlLoader, "first"));
 
         DrawerManager.buildDrawer(this);
     }
@@ -85,7 +84,7 @@ public class HelloGluon extends MobileApplication {
         launch();
     }
 
-    Parent loadFXML(String name) {
+    public Parent loadFXML(FXMLLoader fxmlLoader, String name) {
         fxmlLoader.setLocation(getClass().getResource("/com/gluonhq/hello/views/" + name + ".fxml"));
         fxmlLoader.setResources( ResourceBundle.getBundle("com.gluonhq.hello.views." + name));
         try {
@@ -97,7 +96,7 @@ public class HelloGluon extends MobileApplication {
     }
 }
 
-@Module( library = true, injects = {HelloGluon.class, FirstPresenter.class}, complete = false)
+@Module( library = true, injects = {HelloGluon.class, FirstPresenter.class, SecondPresenter.class}, complete = false)
 class DaggerModule  {
 
     @Provides
