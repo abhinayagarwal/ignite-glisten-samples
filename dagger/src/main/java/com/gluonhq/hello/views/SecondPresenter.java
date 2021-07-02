@@ -14,6 +14,8 @@ import javax.inject.Inject;
 
 public class SecondPresenter  {
 
+    private static MobileApplication appManager = MobileApplication.getInstance();
+
     @FXML
     private View second;
 
@@ -22,17 +24,17 @@ public class SecondPresenter  {
     @Inject
     Service service;
 
+
+
     public void initialize() {
         second.setShowTransitionFactory(BounceInRightTransition::new);
 
-        FloatingActionButton fab = new FloatingActionButton(MaterialDesignIcon.INFO.text,
-                e -> MobileApplication.getInstance().goHome());
+        FloatingActionButton fab = new FloatingActionButton(MaterialDesignIcon.INFO.text, e -> appManager.goHome());
 
         fab.showOn(second);
 
         second.showingProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
-                MobileApplication appManager = MobileApplication.getInstance();
                 AppBar appBar = appManager.getAppBar();
                 appBar.setNavIcon(MaterialDesignIcon.MENU.button(e -> appManager.getDrawer().open()));
                 appBar.setTitleText("Second");
