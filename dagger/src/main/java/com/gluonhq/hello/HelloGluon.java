@@ -37,6 +37,7 @@ import com.gluonhq.hello.views.SecondPresenter;
 import com.gluonhq.ignite.dagger.DaggerContext;
 import dagger.Module;
 import dagger.Provides;
+import dagger.internal.Loader;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
@@ -49,19 +50,22 @@ import java.util.ResourceBundle;
 
 public class HelloGluon extends MobileApplication {
 
-    private final DaggerContext context = new DaggerContext(this, () -> Collections.singletonList(new DaggerModule()));
-
     public static final String PRIMARY_VIEW = HOME_VIEW;
     public static final String SECONDARY_VIEW = "Secondary View";
 
-    @Inject
-    FXMLLoader fxmlLoader;
+    private static final String VIEW_LOCATION = "com/gluonhq/hello/views/";
+
+
+    private final DaggerContext context = new DaggerContext(this, () -> Collections.singletonList(new DaggerModule()));
 
     @Override
     public void init() throws IOException {
+
+
         context.init();
 
-        addViewFactory(PRIMARY_VIEW, () -> (View) loadFXML(fxmlLoader, "first"));
+        addViewFactory(PRIMARY_VIEW,   () -> loadFXML("first"));
+        addViewFactory(SECONDARY_VIEW, () -> loadFXML("second"));
 
         DrawerManager.buildDrawer(this);
     }
@@ -84,9 +88,12 @@ public class HelloGluon extends MobileApplication {
         launch();
     }
 
-    public Parent loadFXML(FXMLLoader fxmlLoader, String name) {
-        fxmlLoader.setLocation(getClass().getResource("/com/gluonhq/hello/views/" + name + ".fxml"));
-        fxmlLoader.setResources( ResourceBundle.getBundle("com.gluonhq.hello.views." + name));
+    public View loadFXML(String name) {
+
+        FXMLLoader fxmlLoader = context.getInstance(FXMLLoader.class);
+
+        fxmlLoader.setLocation(getClass().getResource('/' + VIEW_LOCATION + name + ".fxml"));
+        fxmlLoader.setResources( ResourceBundle.getBundle(  VIEW_LOCATION.replace('/', '.') + name));
         try {
             return fxmlLoader.load();
         } catch (IOException e) {
@@ -96,7 +103,7 @@ public class HelloGluon extends MobileApplication {
     }
 }
 
-@Module( library = true, injects = {HelloGluon.class, FirstPresenter.class, SecondPresenter.class}, complete = false)
+@Module( library = true, injects = {FXMLLoader.class, HelloGluon.class, FirstPresenter.class, SecondPresenter.class }, complete = false)
 class DaggerModule  {
 
     @Provides
@@ -105,5 +112,6 @@ class DaggerModule  {
     }
 
 }
+
 
 

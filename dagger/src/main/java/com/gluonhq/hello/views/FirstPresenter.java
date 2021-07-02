@@ -17,6 +17,8 @@ import static com.gluonhq.hello.HelloGluon.SECONDARY_VIEW;
 
 public class FirstPresenter {
 
+    private static MobileApplication appManager = MobileApplication.getInstance();
+
     @FXML
     private View first;
 
@@ -35,7 +37,6 @@ public class FirstPresenter {
     public void initialize() {
         first.showingProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
-                MobileApplication appManager = MobileApplication.getInstance();
                 AppBar appBar = appManager.getAppBar();
                 appBar.setNavIcon(MaterialDesignIcon.MENU.button(e -> appManager.getDrawer().open()));
                 appBar.setTitleText("First");
@@ -50,8 +51,6 @@ public class FirstPresenter {
     void buttonClick() {
         // label.setText(resources.getString("label.text.2"));
         System.out.println(service.getText());
-        final HelloGluon helloGluon = (HelloGluon) HelloGluon.getInstance();
-        helloGluon.addViewFactory(SECONDARY_VIEW, () -> (View) helloGluon.loadFXML(fxmlLoader, "second"));
-        helloGluon.switchView(SECONDARY_VIEW);
+        appManager.switchView(HelloGluon.SECONDARY_VIEW);
     }
 }
